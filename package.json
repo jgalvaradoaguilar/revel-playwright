@@ -1,0 +1,23 @@
+{
+  "name": "revel-playwright",
+  "version": "1.0.0",
+  "description": "This personal project will be growing gradually in order to achive an automation framework with BDD (ideally)",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jgalvaradoaguilar/revel-playwright.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/jgalvaradoaguilar/revel-playwright/issues"
+  },
+  "homepage": "https://github.com/jgalvaradoaguilar/revel-playwright#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.58.0",
+    "@types/node": "^25.1.0"
+  }
+}
