@@ -1,0 +1,13 @@
+{
+  "happyPathUser": {
+    "email": "jorge.diaz+casopractico@driverevel.com",
+    "country": "ES",
+    "telephone": "879542345",
+    "otp": "8048"
+  },
+  "realUser": {
+    "email": "realuser@yopmail.com",
+    "country": "ES",
+    "telephone": "600222333"
+  }
+}
