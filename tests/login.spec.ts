@@ -8,12 +8,12 @@ let loginPage: LoginPage;
 let fs = require('fs');
 let usersTest = JSON.parse(fs.readFileSync('fixtures/usersTest.json')); 
 
-test.describe('Example Test Suite', () => {
+test.describe('Login Test Suite', () => {
 
   test.beforeEach(async ({ page }, testInfo) => {
     console.log("Test \"" + testInfo.title + "\" started at: " + new Date());
 
-    // Create a new instance of HomePage
+    // Create a new instance of needed pages
     homePage = new HomePage(page);
     loginPage = new LoginPage(page);
 
