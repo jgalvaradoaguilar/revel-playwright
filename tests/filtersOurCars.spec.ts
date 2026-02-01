@@ -49,7 +49,31 @@ test.describe('Filters Our Cars Test Suite', () => {
       expect(await carsPage.getTextOfFirstCarCard()).toContain("Toyota C-HR");
       expect(await carsPage.getTextOfFirstCarCard()).toContain("220PH Advance");
     });
+  });
 
+  test('Verify response of the filter "Car Type" option "SUV"', async ({ page }) => {
+    await test.step('When the user clicks on filter "Car Type"', async () => {
+      console.log("Filter: " + "Car Type");
+      await carsPage.clickBodyTypeFilterButton();
+    });
+
+    await test.step('And the user choose the option "SUV"', async () => {
+      console.log("Filter option: " + "SUV");
+      await carsPage.selectBodyTypeSUV();
+    });
+
+    await test.step('Then the filter option "?bodyType=suv" appears in the URL', async () => {
+      console.log("Filter option URL: " + "?bodyType=suv");
+      console.log("Page URL: " + page.url());
+      expect(page.url()).toContain("?bodyType=suv");
+    });
+
+    await test.step('And the first car in the results page is "Kia XCeed" "1.0 T-GDi Drive"', async () => {
+      carsPage.carsCards.first().scrollIntoViewIfNeeded();
+      console.log("First car in the results: " + await carsPage.getTextOfFirstCarCard());
+      expect(await carsPage.getTextOfFirstCarCard()).toContain("Kia XCeed");
+      expect(await carsPage.getTextOfFirstCarCard()).toContain("1.0 T-GDi Drive");
+    });
   });
 
 });

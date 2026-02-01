@@ -4,6 +4,8 @@ export class CarsPage {
     readonly page: Page;
     readonly fuelFilterButton: Locator;
     readonly fuelElectricHybrid: Locator;
+    readonly bodyTypeFilterButton: Locator;
+    readonly bodyTypeSUV: Locator;
     readonly carsCards: Locator;
     
     /**
@@ -13,9 +15,10 @@ export class CarsPage {
     constructor(page: Page) {
         this.page = page;
         this.fuelFilterButton = page.getByRole('paragraph').filter({ hasText: 'Combustible' });
-        //this.fuelElectricHybrid = page.locator('[class*="FuelTypeFilterShortcut_button"]')
-        //    .filter({ hasText: "Híbrido enchufable" }).first();
-        this.fuelElectricHybrid = page.getByText('Híbrido enchufable').first();            
+        this.fuelElectricHybrid = page.getByText('Híbrido enchufable').first();
+        this.bodyTypeFilterButton = page.getByRole('paragraph').filter({ hasText: 'Tipo de coche' });
+        this.bodyTypeSUV = page.locator('[class*="BodyTypeFilterShortcut_button"]')
+            .filter({ hasText: "SUV" }).first();
         this.carsCards = page.locator('[class*="CarCard_card__car--name"]');
     }
 
@@ -25,6 +28,14 @@ export class CarsPage {
 
     async selectFuelElectricHybrid() {
         await this.fuelElectricHybrid.click();
+    }
+
+    async clickBodyTypeFilterButton() {
+        await this.bodyTypeFilterButton.click();
+    }
+
+    async selectBodyTypeSUV() {
+        await this.bodyTypeSUV.click();
     }
 
     async getTextOfFirstCarCard() {
