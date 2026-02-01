@@ -44,7 +44,7 @@ test.describe('Filters Our Cars Test Suite', () => {
     });
 
     await test.step('And the first car in the results page is "Toyota C-HR" "220PH Advance"', async () => {
-      carsPage.carsCards.first().scrollIntoViewIfNeeded();
+      await carsPage.carsCards.first().scrollIntoViewIfNeeded();
       console.log("First car in the results: " + await carsPage.getTextOfFirstCarCard());
       expect(await carsPage.isPartOfFirstCarCard("Toyota C-HR")).toBeTruthy();
       expect(await carsPage.isPartOfFirstCarCard("220PH Advance")).toBeTruthy();
@@ -69,7 +69,7 @@ test.describe('Filters Our Cars Test Suite', () => {
     });
 
     await test.step('And the first car in the results page is "Kia XCeed" "1.0 T-GDi Drive"', async () => {
-      carsPage.carsCards.first().scrollIntoViewIfNeeded();
+      await carsPage.carsCards.first().scrollIntoViewIfNeeded();
       console.log("First car in the results: " + await carsPage.getTextOfFirstCarCard());
       expect(await carsPage.isPartOfFirstCarCard("Kia XCeed")).toBeTruthy();
       expect(await carsPage.isPartOfFirstCarCard("1.0 T-GDi Drive")).toBeTruthy();
@@ -105,7 +105,7 @@ test.describe('Filters Our Cars Test Suite', () => {
     });
 
     await test.step('And the first car in the results page is "Toyota C-HR" "220PH Advance"', async () => {
-      carsPage.carsCards.first().scrollIntoViewIfNeeded();
+      await carsPage.carsCards.first().scrollIntoViewIfNeeded();
       console.log("First car in the results: " + await carsPage.getTextOfFirstCarCard());
       expect(await carsPage.isPartOfFirstCarCard("Toyota C-HR")).toBeTruthy();
       expect(await carsPage.isPartOfFirstCarCard("220PH Advance")).toBeTruthy();
@@ -190,7 +190,7 @@ test.describe('Filters Our Cars Test Suite', () => {
     });
 
     await test.step('And the first car in the results page is "Peugeot 208" "Allure"', async () => {
-      carsPage.carsCards.first().scrollIntoViewIfNeeded();
+      await carsPage.carsCards.first().scrollIntoViewIfNeeded();
       console.log("First car in the results: " + await carsPage.getTextOfFirstCarCard());
       expect(await carsPage.isPartOfFirstCarCard("Peugeot 208")).toBeTruthy();
       expect(await carsPage.isPartOfFirstCarCard("Allure")).toBeTruthy();
