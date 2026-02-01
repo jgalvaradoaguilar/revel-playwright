@@ -8,6 +8,7 @@ Este es un proyecto en desarrollo que busca crear un framework de automatizació
 
 Si tuviera más tiempo haría esto:
 - Buscaría una buena forma de meterle Cucumber porque los pasos son repetitivos y bien usados permiten crear tests muy rápido y los datos forman parte del propio test-escenario.
+- Pondría los repositorios de objetos, uno por cada página, que eso ya está, pero además que no estén declarados dentro de cada página, para que cuando haya cambios en los elementos no sea necesario tocar nafa que pueda tener código.
 - Metería GitHub Actions pero de eso no tengo ni idea y tendría que investigarlo y después incorporarlo.
 - Mejoraría el proyecto con fixtures que lo he leído de forma transversal porque este ha sido mi primer proyecto de Playwright y también mi primera experiencia con Typescript aunque los expects sí que lo había usado bastante con Ruby + Selenium por lo que más o menos pude completar la prueba técnica.
 
@@ -18,7 +19,7 @@ Si tuviera más tiempo haría esto:
 ### Ver el reporte
 
 El reporte está corriendo en http://localhost:9323.
-En caso de que no se lanze automáticamente, se puede levantar ejecutando:
+En caso de que no se lance automáticamente, se puede levantar ejecutando:
 
     $ npx playwright show-report
 
