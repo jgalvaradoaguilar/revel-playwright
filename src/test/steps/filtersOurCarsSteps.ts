@@ -1,6 +1,6 @@
 import { Given, When, Then, setDefaultTimeout } from '@cucumber/cucumber';
 import { expect } from "@playwright/test";
-import { pageFixture } from "../support/pageFixture";
+import { pageFixture } from "../support/hooks";
 import { HomePage } from '../../pages/HomePage';
 import { CarsPage } from '../../pages/CarsPage';
 
@@ -10,9 +10,7 @@ let carsPage: CarsPage;
 setDefaultTimeout(60 * 1000 * 2); // 2 minutes
 
   Given('the user go to cars page on Revel URL', async function () {
-    console.log("DELETE ME - En Given");
     homePage = new HomePage(pageFixture.page);
-    console.log("DELETE ME - Despues crear homePage");
     await homePage.navigate();
     await homePage.acceptCookies();
     await homePage.clickOurCars();
@@ -32,7 +30,7 @@ setDefaultTimeout(60 * 1000 * 2); // 2 minutes
   Then('the filter option {string} appears in the URL', async function (filterOptionInURL) {
     console.log("Filter option URL: " + filterOptionInURL);
     console.log("Page URL: " + pageFixture.page.url());
-    expect(await carsPage.isPartOfTheURL("?fuelTypes=electric-hybrid")).toBeTruthy();
+    expect(await carsPage.isPartOfTheURL(filterOptionInURL)).toBeTruthy();
 
   });
 

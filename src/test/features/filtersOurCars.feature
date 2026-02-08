@@ -12,4 +12,4 @@ Feature: Filters Our Cars
         Examples:
             | filter    | option          | filterOptionInURL          | firstCarModel | firstCarVersion |
             | Fuel      | Electric Hybrid | ?fuelTypes=electric-hybrid | Toyota C-HR   | 220PH Advance   |
-            | Body Type | SUV             | ?bodyTypes=suv             | Kia XCeed     | 1.0 T-GDi Drive |
+            | Body Type | SUV             | ?bodyType=suv             | Kia XCeed     | 1.0 T-GDi Drive |
