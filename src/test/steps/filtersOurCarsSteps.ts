@@ -40,3 +40,18 @@ setDefaultTimeout(60 * 1000 * 2); // 2 minutes
     expect(await carsPage.isPartOfFirstCarCard(firstCarModel)).toBeTruthy();
     expect(await carsPage.isPartOfFirstCarCard(firstCarVersion)).toBeTruthy();
   });
+
+  Then('a message appears indicating that there are no results for the selected filters', async function () {
+    expect(await carsPage.isVisibleNoResultsMessage()).toBeTruthy();
+  });
+
+  When('the user clean the filter {string}', async function (filter) {
+    console.log("Cleaning filter: " + filter);
+    await carsPage.resetFilterButton(filter);
+  });
+
+  Then('the URL does not contain any filter options', async function () {
+    console.log("Page URL: " + pageFixture.page.url());
+    expect(await carsPage.isPartOfTheURL("fuelTypes=electric-hybrid")).toBeFalsy();
+    expect(await carsPage.isPartOfTheURL("bodyType=suv")).toBeFalsy();
+  });

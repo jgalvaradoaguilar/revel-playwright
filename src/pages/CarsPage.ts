@@ -89,4 +89,8 @@ export class CarsPage {
         return firstCarText.includes(part);
     }
 
+    async isVisibleNoResultsMessage() {
+        return await this.carsLocators.noResultsMessage.isVisible();
+    }
+
 };
