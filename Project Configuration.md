@@ -14,14 +14,21 @@ Proyecto de automatización de pruebas de UI para la plataforma Revel utilizando
 
     $ npm init playwright@latest
     $ npm i @cucumber/cucumber -D
-    $ npm i ts-node -D
+    $ npm i -D typescript ts-node @types/node
+    $ npx tsc --init (no ejecutar porque reemplaza tsconfig.json)
+    $ npm install dotenv --save (no ejecutar porque actualiza playwright.config.ts)
+    $ npm install --save-dev prettier
+    $ npm install -D eslint @typescript-eslint/parser @typescript-eslint/eslint-plugin
+    $ npm install -D eslint eslint-plugin-playwright eslint-plugin-promise
+    $ npm install -D husky lint-staged commitlint @commitlint/config-conventional
+    $ npx husky init
 
 
 ## Configurar la extesnión de Cucumber
 
-Before running, we need to update step and feature path definitions in the cucumber settings. To do this, press Ctrl + Comma, search for Cucumber, and click the ‘Edit in settings.json’ link.
+Hay que buscar la extensión de Cucumber y modificar las rutas de las features y los steps. Para hacerlo, presiona Ctrl + Comma, busca Cucumber y clica en ‘Edit in settings.json’.
 
-- Update settings.json file as:
+- Actualiza las rutas en el "settings.json":
 
     "cucumber.features": [
         "src/test/features/*.feature"

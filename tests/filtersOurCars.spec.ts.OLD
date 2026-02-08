@@ -1,8 +1,8 @@
 import { test, expect } from '@playwright/test';
 
-import { HomePage } from '../pages/HomePage';
+import { HomePage } from '../src/pages/HomePage';
 let homePage: HomePage;
-import { CarsPage } from '../pages/CarsPage';
+import { CarsPage } from '../src/pages/CarsPage';
 let carsPage: CarsPage;
 
 test.describe('Filters Our Cars Test Suite', () => {

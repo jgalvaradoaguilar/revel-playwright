@@ -12,6 +12,10 @@ Si tuviera más tiempo haría esto:
 - Metería GitHub Actions pero de eso no tengo ni idea y tendría que investigarlo y después incorporarlo.
 - Mejoraría el proyecto con fixtures que lo he leído de forma transversal porque este ha sido mi primer proyecto de Playwright y también mi primera experiencia con Typescript aunque los expects sí que lo había usado bastante con Ruby + Selenium por lo que más o menos pude completar la prueba técnica.
 
+### Formatear el proyecto (prettier)
+    
+    $ npm format
+
 ### Ejecución (Sí ejecuta la feature)
     
     $ npm test

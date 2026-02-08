@@ -1,8 +1,8 @@
 import { test, expect } from '@playwright/test';
 
-import { HomePage } from '../pages/HomePage';
+import { HomePage } from '../src/pages/HomePage';
 let homePage: HomePage;
-import { LoginPage } from '../pages/LoginPage';
+import { LoginPage } from '../src/pages/LoginPage';
 let loginPage: LoginPage;
 
 let fs = require('fs');
