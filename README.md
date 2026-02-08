@@ -12,11 +12,11 @@ Si tuviera más tiempo haría esto:
 - Metería GitHub Actions pero de eso no tengo ni idea y tendría que investigarlo y después incorporarlo.
 - Mejoraría el proyecto con fixtures que lo he leído de forma transversal porque este ha sido mi primer proyecto de Playwright y también mi primera experiencia con Typescript aunque los expects sí que lo había usado bastante con Ruby + Selenium por lo que más o menos pude completar la prueba técnica.
 
-### Ejecución
+### Ejecución (Sí ejecuta la feature)
     
-    $ npx playwright test
+    $ npm test
 
-### Ver el reporte
+### Ver el reporte (No funciona)
 
 El reporte está corriendo en http://localhost:9323.
 En caso de que no se lance automáticamente, se puede levantar ejecutando:

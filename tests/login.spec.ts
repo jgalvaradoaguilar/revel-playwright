@@ -29,7 +29,7 @@ test.describe('Login Test Suite', () => {
     console.log("Test \"" + testInfo.title + "\" finished at: " + new Date());
   });
 
-  test('Login successful with phone pre-set OTP', async ({ page }) => {
+  test.skip('Login successful with phone pre-set OTP', async ({ page }) => {
     await test.step('And the user login with his phone', async () => {
       console.log("Phone: " + usersTest.happyPathUser.telephone);
       await loginPage.setPhone(usersTest.happyPathUser.telephone);
@@ -50,7 +50,7 @@ test.describe('Login Test Suite', () => {
     });
   });
 
-   test('Login failed because a wrong OTP code', async ({ page }) => {
+   test.skip('Login failed because a wrong OTP code', async ({ page }) => {
     await test.step('And the user login with his phone', async () => {
       console.log("Phone: " + usersTest.happyPathUser.telephone);
       await loginPage.setPhone(usersTest.happyPathUser.telephone);

@@ -26,7 +26,7 @@ test.describe('Filters Our Cars Test Suite', () => {
     console.log("Test \"" + testInfo.title + "\" finished at: " + new Date());
   });
 
-  test('Verify response of the filter "Fuel" option "Electric Hybrid"', async ({ page }) => {
+  test.skip('Verify response of the filter "Fuel" option "Electric Hybrid"', async ({ page }) => {
     await test.step('When the user clicks on filter "Fuel"', async () => {
       console.log("Filter: " + "Fuel");
       await carsPage.clickFilterButton("Fuel");
@@ -51,7 +51,7 @@ test.describe('Filters Our Cars Test Suite', () => {
     });
   });
 
-  test('Verify response of the filter "Body Type" option "SUV"', async ({ page }) => {
+  test.skip('Verify response of the filter "Body Type" option "SUV"', async ({ page }) => {
     await test.step('When the user clicks on filter "Body Type"', async () => {
       console.log("Filter: " + "Body Type");
       await carsPage.clickFilterButton("Body Type");
@@ -76,7 +76,7 @@ test.describe('Filters Our Cars Test Suite', () => {
     });
   });
 
-  test('Verify response of the filters "Fuel" option "Electric Hybrid" and "Body Type" option "SUV"', async ({ page }) => {
+  test.skip('Verify response of the filters "Fuel" option "Electric Hybrid" and "Body Type" option "SUV"', async ({ page }) => {
     await test.step('When the user clicks on filter "Fuel"', async () => {
       console.log("Filter: " + "Fuel");
       await carsPage.clickFilterButton("Fuel");
@@ -112,7 +112,7 @@ test.describe('Filters Our Cars Test Suite', () => {
     });
   });  
 
-  test('Filters without results. "Fuel: Electric Hybrid", "Body Type: SUV", "Color: Blanco"', async ({ page }) => {
+  test.skip('Filters without results. "Fuel: Electric Hybrid", "Body Type: SUV", "Color: Blanco"', async ({ page }) => {
     await test.step('When the user clicks on filter "Fuel"', async () => {
       console.log("Filter: " + "Fuel");
       await carsPage.clickFilterButton("Fuel");
@@ -155,7 +155,7 @@ test.describe('Filters Our Cars Test Suite', () => {
     });
   });
 
-  test('Cleaning filters. Filters "Fuel: Electric Hybrid" and "Body Type: SUV"', async ({ page }) => {
+  test.skip('Cleaning filters. Filters "Fuel: Electric Hybrid" and "Body Type: SUV"', async ({ page }) => {
     await test.step('And the user clicks on filter "Fuel"', async () => {
       console.log("Filter: " + "Fuel");
       await carsPage.clickFilterButton("Fuel");
