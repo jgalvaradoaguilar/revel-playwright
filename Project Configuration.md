@@ -1,54 +1,58 @@
-# revel-playwright
+# Configuración del proyecto
 
-Proyecto de automatización de pruebas de UI para la plataforma Revel utilizando **Playwright** con **TypeScript**.
+Proyecto de pruebas UI de Revel con Playwright, TypeScript y Cucumber.js.
 
-## Dependencias/librerías instaladas
+## Requisitos e instalación
 
-- Node.js
-- Java (JDK)
-- Apache Maven
-- IDE recomendado: Visual Studio Code
-- Extensión necesaria: Cucumber for Visual Studio Code
+- Node.js 22 o superior y npm.
+- Visual Studio Code y la extensión Cucumber son opcionales.
+- Java y Maven no son necesarios.
 
-Las pruebas se ejecutan con Cucumber.js; Playwright se usa para controlar el navegador. La extensión Playwright Test for VS Code no es necesaria para lanzar estas pruebas.
+Instala dependencias y Chromium:
 
-## Ejecutar pruebas y generar el reporte
+```shell
+npm ci
+npx playwright install chromium
+```
 
-    $ npm test
+## Variables locales
 
-El comando ejecuta Cucumber y, al finalizar, genera el informe HTML de Masterthought usando `maven-cucumber-reporting`.
+El proyecto carga la configuración de `.env` mediante `dotenv`:
 
-- Informe principal: `target/cucumber-html-reports/overview-features.html`
-- JSON original: `target/cucumber-reports/cucumber.json`
-- JSON preparado para Masterthought: `target/cucumber-reports/cucumber-report.json`
+- `ENVIRONMENT` es obligatoria: `QA`, `DEV`, `STAGE` o `PROD`. QA y DEV utilizan la URL de QA; STAGE y PROD utilizan la URL de Stage.
+- `BROWSER` admite `chromium`, `firefox` o `webkit`; si no se especifica, se utiliza Chromium.
+- `HEADLESS=true` ejecuta el navegador sin interfaz. Con cualquier otro valor, se muestra el navegador.
 
-Java y Maven deben estar disponibles en `PATH`. También se pueden ejecutar las pruebas desde **Terminal > Run Task** en VS Code. Las tasks están definidas en `.vscode/tasks.json`: hay una por feature y una por cada `Scenario Outline`, filtradas con sus tags Cucumber.
+No añadas credenciales sensibles a `.env` ni las incluyas en cambios compartidos; proporciona secretos mediante variables de entorno seguras.
 
-`mvn verify` solo regenera el informe a partir del JSON existente; para ejecutar los escenarios y después crear el informe, usa `npm test` o una de las tasks de VS Code.
+## Ejecución
 
-## Comandos ejecutados en el proceso
+```shell
+npm test
+```
 
-    $ npm init playwright@latest
-    $ npm i @cucumber/cucumber -D
-    $ npm i -D typescript ts-node @types/node
-    $ npx tsc --init (no ejecutar porque reemplaza tsconfig.json)
-    $ npm install dotenv --save (no ejecutar porque actualiza playwright.config.ts)
-    $ npm install --save-dev prettier
-    $ npm install -D eslint @typescript-eslint/parser @typescript-eslint/eslint-plugin
-    $ npm install -D eslint eslint-plugin-playwright eslint-plugin-promise
-    $ npm install -D husky lint-staged commitlint @commitlint/config-conventional
-    $ npx husky init
+Ejecuta las features de Cucumber y genera el reporte. Antes de las pruebas, npm ejecuta `tsc --noEmit`.
 
+En VS Code, selecciona **Terminal > Run Task**. `.vscode/tasks.json` contiene dos tasks para ejecutar features completas y seis tasks filtradas por los tags de cada `Scenario Outline`. Todas generan el mismo reporte que `npm test`.
 
-## Configurar la extesnión de Cucumber
+Las variables opcionales `CUCUMBER_FEATURE` y `CUCUMBER_TAG` permiten seleccionar una feature o un tag; la configuración está en `cucumber.js`.
 
-Hay que buscar la extensión de Cucumber y modificar las rutas de las features y los steps. Para hacerlo, presiona Ctrl + Comma, busca Cucumber y clica en ‘Edit in settings.json’.
+## Reporte
 
-- Actualiza las rutas en el "settings.json":
+El reporte JavaScript de Multiple Cucumber HTML Reporter se crea en:
 
-    "cucumber.features": [
-        "src/test/features/*.feature"
-    ],
-    "cucumber.glue": [
-        "src/test/steps/*.ts"
-    ]
+- `target/cucumber-html-reports/index.html` (página principal)
+- `target/cucumber-html-reports/features/` (detalle por feature)
+- `target/cucumber-reports/cucumber.json` (JSON de Cucumber)
+
+Los ejemplos de `Scenario Outline` se muestran expandidos. El reporte se genera incluso si hay escenarios fallidos, mientras el comando devuelve el código de salida de Cucumber. `target/` está excluida del control de versiones.
+
+## Carpetas principales
+
+- `src/config/`: selección de entorno, navegador y modo de ejecución.
+- `src/pages/`: Page Objects.
+- `src/support/locators/`: locators de interfaz.
+- `src/test/features/`: features Gherkin.
+- `src/test/steps/`: definiciones de pasos.
+- `src/test/support/hooks.ts`: hooks Before/After para el ciclo de vida de Playwright.
+- `scripts/run-cucumber.js`: ejecución de Cucumber y generación del reporte.
