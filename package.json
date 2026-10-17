@@ -4,7 +4,7 @@
   "description": "This personal project will be growing gradually in order to achive an automation framework with BDD (ideally)",
   "main": "index.js",
   "scripts": {
-    "test": "cucumber-js",
+    "test": "node scripts/run-cucumber.js",
     "format": "prettier --write .",
     "lint": "eslint **/*.ts .",
     "pretest": "tsc --noEmit",

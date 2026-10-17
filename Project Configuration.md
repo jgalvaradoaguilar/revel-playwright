@@ -5,10 +5,26 @@ Proyecto de automatización de pruebas de UI para la plataforma Revel utilizando
 ## Dependencias/librerías instaladas
 
 - Node.js
+- Java (JDK)
+- Apache Maven
 - IDE recomendado: Visual Studio Code
-- Extensión necesaria: Playwright Test for VSCode
 - Extensión necesaria: Cucumber for Visual Studio Code
 
+Las pruebas se ejecutan con Cucumber.js; Playwright se usa para controlar el navegador. La extensión Playwright Test for VS Code no es necesaria para lanzar estas pruebas.
+
+## Ejecutar pruebas y generar el reporte
+
+    $ npm test
+
+El comando ejecuta Cucumber y, al finalizar, genera el informe HTML de Masterthought usando `maven-cucumber-reporting`.
+
+- Informe principal: `target/cucumber-html-reports/overview-features.html`
+- JSON original: `target/cucumber-reports/cucumber.json`
+- JSON preparado para Masterthought: `target/cucumber-reports/cucumber-report.json`
+
+Java y Maven deben estar disponibles en `PATH`. También se pueden ejecutar las pruebas desde **Terminal > Run Task** en VS Code. Las tasks están definidas en `.vscode/tasks.json`: hay una por feature y una por cada `Scenario Outline`, filtradas con sus tags Cucumber.
+
+`mvn verify` solo regenera el informe a partir del JSON existente; para ejecutar los escenarios y después crear el informe, usa `npm test` o una de las tasks de VS Code.
 
 ## Comandos ejecutados en el proceso
 

@@ -1,0 +1,139 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Test: Filters Our Cars feature",
+      "type": "shell",
+      "command": "npm",
+      "args": ["test"],
+      "windows": {
+        "command": "npm.cmd"
+      },
+      "options": {
+        "env": {
+          "CUCUMBER_FEATURE": "src/test/features/filtersOurCars.feature"
+        }
+      },
+      "group": "test",
+      "problemMatcher": []
+    },
+    {
+      "label": "Test: Login feature",
+      "type": "shell",
+      "command": "npm",
+      "args": ["test"],
+      "windows": {
+        "command": "npm.cmd"
+      },
+      "options": {
+        "env": {
+          "CUCUMBER_FEATURE": "src/test/features/login.feature"
+        }
+      },
+      "group": "test",
+      "problemMatcher": []
+    },
+    {
+      "label": "Test: Single car filter option",
+      "type": "shell",
+      "command": "npm",
+      "args": ["test"],
+      "windows": {
+        "command": "npm.cmd"
+      },
+      "options": {
+        "env": {
+          "CUCUMBER_FEATURE": "src/test/features/filtersOurCars.feature",
+          "CUCUMBER_TAG": "@filter_single_option"
+        }
+      },
+      "group": "test",
+      "problemMatcher": []
+    },
+    {
+      "label": "Test: Combined car filter options",
+      "type": "shell",
+      "command": "npm",
+      "args": ["test"],
+      "windows": {
+        "command": "npm.cmd"
+      },
+      "options": {
+        "env": {
+          "CUCUMBER_FEATURE": "src/test/features/filtersOurCars.feature",
+          "CUCUMBER_TAG": "@filter_combined_options"
+        }
+      },
+      "group": "test",
+      "problemMatcher": []
+    },
+    {
+      "label": "Test: Car filters without results",
+      "type": "shell",
+      "command": "npm",
+      "args": ["test"],
+      "windows": {
+        "command": "npm.cmd"
+      },
+      "options": {
+        "env": {
+          "CUCUMBER_FEATURE": "src/test/features/filtersOurCars.feature",
+          "CUCUMBER_TAG": "@filter_no_results"
+        }
+      },
+      "group": "test",
+      "problemMatcher": []
+    },
+    {
+      "label": "Test: Clear car filters",
+      "type": "shell",
+      "command": "npm",
+      "args": ["test"],
+      "windows": {
+        "command": "npm.cmd"
+      },
+      "options": {
+        "env": {
+          "CUCUMBER_FEATURE": "src/test/features/filtersOurCars.feature",
+          "CUCUMBER_TAG": "@filter_clear"
+        }
+      },
+      "group": "test",
+      "problemMatcher": []
+    },
+    {
+      "label": "Test: Successful login scenario",
+      "type": "shell",
+      "command": "npm",
+      "args": ["test"],
+      "windows": {
+        "command": "npm.cmd"
+      },
+      "options": {
+        "env": {
+          "CUCUMBER_FEATURE": "src/test/features/login.feature",
+          "CUCUMBER_TAG": "@login_successful"
+        }
+      },
+      "group": "test",
+      "problemMatcher": []
+    },
+    {
+      "label": "Test: Login with invalid OTP",
+      "type": "shell",
+      "command": "npm",
+      "args": ["test"],
+      "windows": {
+        "command": "npm.cmd"
+      },
+      "options": {
+        "env": {
+          "CUCUMBER_FEATURE": "src/test/features/login.feature",
+          "CUCUMBER_TAG": "@login_invalid_otp"
+        }
+      },
+      "group": "test",
+      "problemMatcher": []
+    }
+  ]
+}

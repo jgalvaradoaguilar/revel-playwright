@@ -12,19 +12,41 @@ Si tuviera más tiempo haría esto:
 - Implementaría herencia en "pages" (si se pudiera) para implementar métodos genéricos "isVisible" y similares.
 - Metería GitHub Actions pero de eso no tengo ni idea y tendría que investigarlo y después incorporarlo.
 
-### Formatear el proyecto (prettier)
+## Formatear el proyecto
 
     $ npm format
 
-### Ejecución
+## Ejecución de pruebas
 
     $ npm test
 
-### Ver el reporte (No funciona)
+`npm test` ejecuta todas las features con Cucumber.js. Para lanzar las pruebas desde VS Code, abre **Terminal > Run Task** y elige una de estas tasks:
 
-Se crea un reporte cucumber html que deberá ser expuesto en CI/CD para poder revisar las features.
+- **Por feature**:
+  - `Test: Filters Our Cars feature`
+  - `Test: Login feature`
+- **Por Scenario Outline**:
+  - `Test: Single car filter option` (`@filter_single_option`)
+  - `Test: Combined car filter options` (`@filter_combined_options`)
+  - `Test: Car filters without results` (`@filter_no_results`)
+  - `Test: Clear car filters` (`@filter_clear`)
+  - `Test: Successful login scenario` (`@login_successful`)
+  - `Test: Login with invalid OTP` (`@login_invalid_otp`)
 
-Lo tenemos en local en: file:///{tu_directorio}/revel-playwright/reports/cucumber-report.html
+Las tasks seleccionan la feature y/o el tag y generan el reporte de la misma manera que `npm test`.
+
+## Reportes de Cucumber
+
+Después de ejecutar Cucumber, el script genera el reporte multipágina de Masterthought mediante Maven:
+
+- Informe principal: `target/cucumber-html-reports/overview-features.html`
+- Otras vistas: `overview-tags.html`, `overview-steps.html` y `overview-failures.html`
+- JSON original de Cucumber: `target/cucumber-reports/cucumber.json`
+- JSON preparado para Masterthought: `target/cucumber-reports/cucumber-report.json`
+
+El JSON original conserva los hooks; la copia para el informe omite los hooks ocultos de Cucumber para evitar marcadores internos en el HTML. La carpeta `target/` se crea automáticamente y está excluida del control de versiones.
+
+Para ejecutar pruebas y generar el informe se necesitan Node.js, Java y Maven disponibles en `PATH`. `mvn verify` genera el informe a partir del JSON existente, pero no ejecuta por sí solo los escenarios de Cucumber.
 
 ## 🛠️ Stack Tecnológico
 
@@ -33,8 +55,9 @@ Lo tenemos en local en: file:///{tu_directorio}/revel-playwright/reports/cucumbe
 - **Framework BDD**: Cucumber.js
 - **Patrón de Diseño**: Page Object Model (POM) + Locators separados
 - **Estructura de Tests**: Features (Gherkin) → Steps (TypeScript) → Pages (POM) → Locators
-- **Test Runner**: Playwright + Cucumber
-- **Reporte**: HTML Cucumber Reports
+- **Test Runner**: Cucumber.js
+- **Automatización del navegador**: Playwright
+- **Reporte**: Masterthought `maven-cucumber-reporting`
 
 ### Arquitectura
 
@@ -57,7 +80,7 @@ Se han implementado 2 escenarios con ejemplos parametrizados:
 #### 1. Login successful with phone pre-set OTP
 
 ```gherkin
-Scenario Outline: Login successful with phone pre-set OTP: <email> - <phone> - <otp_code>
+Scenario Outline: Login successful with phone pre-set OTP: <email> - <phone> - <otp>
   Given the user go to login on Revel URL
   And the user login with his phone "<phone>"
   When the user writes the OTP received "<otp>"
@@ -71,7 +94,7 @@ Scenario Outline: Login successful with phone pre-set OTP: <email> - <phone> - <
 #### 2. Login failed because a wrong OTP code
 
 ```gherkin
-Scenario Outline: Login failed because a wrong OTP code: <email> - <phone> - <otp_code>
+Scenario Outline: Login failed because a wrong OTP code: <email> - <phone> - <otp>
   Given the user go to login on Revel URL
   And the user login with his phone "<phone>"
   When the user writes the OTP received "<otp>"
@@ -84,30 +107,30 @@ Scenario Outline: Login failed because a wrong OTP code: <email> - <phone> - <ot
 
 ### Filters Our Cars Test Suite (`src/test/features/filtersOurCars.feature`)
 
-Se han implementado 5 escenarios con ejemplos parametrizados:
+El feature contiene cuatro `Scenario Outline`, cada uno con un tag propio para su task de VS Code:
 
-#### 1. Verify response of the filter "Fuel" option "Electric Hybrid"
+- `@filter_single_option`: filtro individual (actualmente, los pasos de selección y comprobación están comentados en el feature).
+- `@filter_combined_options`: combinación de Fuel y Body Type.
+- `@filter_no_results`: combinación de filtros sin resultados.
+- `@filter_clear`: limpieza de los filtros aplicados.
+
+El ejemplo individual de Body Type/SUV también está comentado, por lo que no se ejecuta. Los demás outlines tienen un ejemplo activo cada uno.
+
+#### Single filter (currently partially disabled)
 
 ```gherkin
 Scenario Outline: Verify response of the filter "<filter>" option "<option>"
   Given the user go to cars page on Revel URL
   When the user clicks on filter "<filter>"
-  And the user choose the option "<option>"
-  Then the filter option "<filterOptionInURL>" appears in the URL
-  And the first car in the results page is "<firstCarModel>" "<firstCarVersion>"
+  #And the user choose the option "<option>"
+  #Then the filter option "<filterOptionInURL>" appears in the URL
+  #And the first car in the results page is "<firstCarModel>" "<firstCarVersion>"
 ```
 
-- **Objetivo**: Validar filtrado por tipo de combustible
-- **Datos de prueba**: Fuel/Electric Hybrid/`?fuelTypes=electric-hybrid`
-- **Verificación**: URL contiene parámetro → Primer resultado es Toyota C-HR 220PH Advance
+- **Datos de ejemplo**: Fuel/Electric Hybrid/`?fuelTypes=electric-hybrid`
+- En el estado actual, la selección de la opción y las comprobaciones de URL y vehículo están comentadas; este outline solo navega a la página de coches y abre el filtro Fuel.
 
-#### 2. Verify response of the filter "Body Type" option "SUV"
-
-- **Objetivo**: Validar filtrado por tipo de carrocería
-- **Datos de prueba**: Body Type/SUV/`?bodyType=suv`
-- **Verificación**: URL contiene parámetro → Primer resultado es Kia XCeed 1.0 T-GDi Drive
-
-#### 3. Verify response of the filters "Fuel" y "Body Type" combinados
+#### Verify response of the filters "Fuel" y "Body Type" combinados
 
 ```gherkin
 Scenario Outline: Verify response of the filters "<filter_1>" option "<option_1>" and "<filter_2>" option "<option_2>"
@@ -124,13 +147,13 @@ Scenario Outline: Verify response of the filters "<filter_1>" option "<option_1>
 - **Datos de prueba**: Fuel + Body Type
 - **Verificación**: URL contiene ambos parámetros → Resultado correcto
 
-#### 4. Filters without results
+#### Filters without results
 
 - **Objetivo**: Validar comportamiento cuando no hay resultados
 - **Datos de prueba**: Combinación Fuel + Body Type + Color (sin resultados)
 - **Verificación**: Aparece mensaje "¿No encuentras lo que buscas?"
 
-#### 5. Cleaning filters
+#### Cleaning filters
 
 - **Objetivo**: Validar limpieza de filtros aplicados
 - **Datos de prueba**: Fuel + Body Type aplicados y luego limpiados
