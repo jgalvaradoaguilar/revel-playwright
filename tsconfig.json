@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "Node16",
+    "lib": ["ESNext", "DOM"],
+    "strict": true,
+    "esModuleInterop": true,
+    "moduleResolution": "Node16",
+    "outDir": "dist",
+    "rootDir": "src"
+  },
+  "exclude": ["node_modules"]
+}

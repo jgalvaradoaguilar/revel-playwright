@@ -1,0 +1,10 @@
+local_branch="$(git rev-parse --abbrev-ref HEAD)"
+#valid_branch_regex="^(feature|fix|hotfix|improvement|library)/(TAE|QE)-[0-9]{1,5}_[A-Za-z0-9._-]+$"
+#message="There is something wrong with your branch name $local_branch.\nBranch names in this project must adhere to this contract: $valid_branch_regex.\nYour commit will be rejected. You should rename your branch to a valid name and try again.\nPlease rename the branch using 'git branch -m <new_branch_name>'"
+
+#if [[ ! $local_branch =~ $valid_branch_regex ]]; then
+#    echo -e "$message"
+#    exit 1
+#fi
+
+#exit 0

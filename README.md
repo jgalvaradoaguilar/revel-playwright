@@ -7,71 +7,212 @@ Proyecto de automatización de pruebas de UI para la plataforma Revel utilizando
 Este es un proyecto en desarrollo que busca crear un framework de automatización robusto siguiendo principios de **BDD (Behavior Driven Development)**. Las pruebas se centran en validar funcionalidades críticas de la aplicación web como autenticación y filtrado de vehículos.
 
 Si tuviera más tiempo haría esto:
-- Buscaría una buena forma de meterle Cucumber porque los pasos son repetitivos y bien usados permiten crear tests muy rápido y los datos forman parte del propio test-escenario.
-- Pondría los repositorios de objetos, uno por cada página, que eso ya está, pero además que no estén declarados dentro de cada page sino en ficheros aparte, para que cuando haya cambios en los elementos no sea necesario tocar nada que pueda tener código.
+
+- Aunque los objetos están declarados fuera de las páginas, quiero buscar una mejor forma de inicializar las instancias "pages".
+- Implementaría herencia en "pages" (si se pudiera) para implementar métodos genéricos "isVisible" y similares.
 - Metería GitHub Actions pero de eso no tengo ni idea y tendría que investigarlo y después incorporarlo.
-- Mejoraría el proyecto con fixtures que lo he leído de forma transversal porque este ha sido mi primer proyecto de Playwright y también mi primera experiencia con Typescript aunque los expects sí que lo había usado bastante con Ruby + Selenium por lo que más o menos pude completar la prueba técnica.
 
-### Ejecución
-    
-    $ npx playwright test
+## Formatear el proyecto
 
-### Ver el reporte
+    $ npm format
 
-El reporte está corriendo en http://localhost:9323.
-En caso de que no se lance automáticamente, se puede levantar ejecutando:
+## Ejecución de pruebas
 
-    $ npx playwright show-report
+    $ npm test
+
+`npm test` ejecuta todas las features con Cucumber.js. Para lanzar las pruebas desde VS Code, abre **Terminal > Run Task** y elige una de estas tasks:
+
+- **Por feature**:
+  - `Test: Filters Our Cars feature`
+  - `Test: Login feature`
+- **Por Scenario Outline**:
+  - `Test: Single car filter option` (`@filter_single_option`)
+  - `Test: Combined car filter options` (`@filter_combined_options`)
+  - `Test: Car filters without results` (`@filter_no_results`)
+  - `Test: Clear car filters` (`@filter_clear`)
+  - `Test: Successful login scenario` (`@login_successful`)
+  - `Test: Login with invalid OTP` (`@login_invalid_otp`)
+
+Las tasks seleccionan la feature y/o el tag y generan el reporte de la misma manera que `npm test`.
+
+## Reportes de Cucumber
+
+Después de ejecutar Cucumber, el script genera el reporte multipágina de Masterthought mediante Maven:
+
+- Informe principal: `target/cucumber-html-reports/overview-features.html`
+- Otras vistas: `overview-tags.html`, `overview-steps.html` y `overview-failures.html`
+- JSON original de Cucumber: `target/cucumber-reports/cucumber.json`
+- JSON preparado para Masterthought: `target/cucumber-reports/cucumber-report.json`
+
+El JSON original conserva los hooks; la copia para el informe omite los hooks ocultos de Cucumber para evitar marcadores internos en el HTML. La carpeta `target/` se crea automáticamente y está excluida del control de versiones.
+
+Para ejecutar pruebas y generar el informe se necesitan Node.js, Java y Maven disponibles en `PATH`. `mvn verify` genera el informe a partir del JSON existente, pero no ejecuta por sí solo los escenarios de Cucumber.
 
 ## 🛠️ Stack Tecnológico
 
-- **Framework**: Playwright
+- **Framework de Automatización**: Playwright
 - **Lenguaje**: TypeScript
-- **Test Framework**: Playwright Test
-- **Patrón**: Page Object Model (POM)
-- **Reporte**: HTML Reporter
+- **Framework BDD**: Cucumber.js
+- **Patrón de Diseño**: Page Object Model (POM) + Locators separados
+- **Estructura de Tests**: Features (Gherkin) → Steps (TypeScript) → Pages (POM) → Locators
+- **Test Runner**: Cucumber.js
+- **Automatización del navegador**: Playwright
+- **Reporte**: Masterthought `maven-cucumber-reporting`
+
+### Arquitectura
+
+El proyecto sigue una estructura escalable basada en:
+
+- **Features**: Archivos `.feature` con escenarios en lenguaje Gherkin para máxima legibilidad
+- **Steps**: Implementación de definiciones de pasos en TypeScript (`*Steps.ts`)
+- **Pages**: Clases que encapsulan la lógica de interacción con páginas (POM)
+- **Locators**: Clases separadas que centralizan todos los selectores de elementos (`*Locators.ts`)
+- **Environments & Browsers**: Configuración por enumeraciones para diferentes entornos
 
 ## 🧪 Test Cases Implementados
 
-### Login Test Suite
+Los test cases están definidos en archivos **Feature** usando lenguaje Gherkin y se ejecutan a través de **steps** en TypeScript. Esto proporciona máxima legibilidad y mantenibilidad.
 
-Se han implementado 2 casos de prueba en el módulo de login:
+### Login Test Suite (`src/test/features/login.feature`)
 
-1. **Login successful with phone pre-set OTP** 
-   - Valida que un usuario pueda autenticarse correctamente ingresando su número de teléfono y el OTP predeterminado
-   - Verifica que aparezca la imagen de "Login Successful" tras la autenticación
+Se han implementado 2 escenarios con ejemplos parametrizados:
 
-2. **Login failed because a wrong OTP code**
-   - Valida que el sistema rechace un OTP incorrecto
-   - Verifica que se muestre el mensaje de error "Este código no es válido"
+#### 1. Login successful with phone pre-set OTP
 
-### Filters Our Cars Test Suite
+```gherkin
+Scenario Outline: Login successful with phone pre-set OTP: <email> - <phone> - <otp>
+  Given the user go to login on Revel URL
+  And the user login with his phone "<phone>"
+  When the user writes the OTP received "<otp>"
+  Then the user is logged successfully
+```
 
-Se han implementado 5 casos de prueba en el módulo de filtrado de vehículos:
+- **Objetivo**: Validar autenticación exitosa con teléfono y OTP correcto
+- **Datos de prueba**: Email, país, teléfono y OTP en tabla Examples
+- **Verificación**: Debe aparecer la imagen de "Login Successful"
 
-1. **Verify response of the filter "Fuel" option "Electric Hybrid"**
-   - Aplica el filtro de combustible "Híbrido enchufable"
-   - Verifica que la URL contenga `?fuelTypes=electric-hybrid`
-   - Valida que el primer vehículo en resultados sea "Toyota C-HR 220PH Advance"
+#### 2. Login failed because a wrong OTP code
 
-2. **Verify response of the filter "Body Type" option "SUV"**
-   - Aplica el filtro de tipo de coche "SUV"
-   - Verifica que la URL contenga `?bodyType=suv`
-   - Valida que el primer vehículo en resultados sea "Kia XCeed 1.0 T-GDi Drive"
+```gherkin
+Scenario Outline: Login failed because a wrong OTP code: <email> - <phone> - <otp>
+  Given the user go to login on Revel URL
+  And the user login with his phone "<phone>"
+  When the user writes the OTP received "<otp>"
+  Then an error message is showed
+```
 
-3. **Verify response of the filters "Fuel" option "Electric Hybrid" and "Body Type" option "SUV"**
-   - Aplica múltiples filtros de forma combinada
-   - Verifica que la URL contenga ambos parámetros: `?fuelTypes=electric-hybrid&bodyType=suv`
-   - Valida que el primer vehículo siga siendo "Toyota C-HR 220PH Advance"
+- **Objetivo**: Validar rechazo de OTP incorrecto
+- **Datos de prueba**: OTP inválido (1234) en tabla Examples
+- **Verificación**: Debe mostrarse mensaje de error "Este código no es válido"
 
-4. **Filters without results. "Fuel: Electric Hybrid", "Body Type: SUV", "Color: Blanco"**
-   - Aplica una combinación de tres filtros que no produce resultados
-   - Verifica que aparezca el mensaje "¿No encuentras lo que buscas?"
+### Filters Our Cars Test Suite (`src/test/features/filtersOurCars.feature`)
 
-5. **Cleaning filters. Filters "Fuel: Electric Hybrid" and "Body Type: SUV"**
-   - Aplica filtros y luego los limpia mediante los botones de reset
-   - Verifica que la URL no contenga parámetros de filtro
-   - Valida que el primer vehículo sea "Peugeot 208 Allure" (resultado por defecto)
+El feature contiene cuatro `Scenario Outline`, cada uno con un tag propio para su task de VS Code:
+
+- `@filter_single_option`: filtro individual (actualmente, los pasos de selección y comprobación están comentados en el feature).
+- `@filter_combined_options`: combinación de Fuel y Body Type.
+- `@filter_no_results`: combinación de filtros sin resultados.
+- `@filter_clear`: limpieza de los filtros aplicados.
+
+El ejemplo individual de Body Type/SUV también está comentado, por lo que no se ejecuta. Los demás outlines tienen un ejemplo activo cada uno.
+
+#### Single filter (currently partially disabled)
+
+```gherkin
+Scenario Outline: Verify response of the filter "<filter>" option "<option>"
+  Given the user go to cars page on Revel URL
+  When the user clicks on filter "<filter>"
+  #And the user choose the option "<option>"
+  #Then the filter option "<filterOptionInURL>" appears in the URL
+  #And the first car in the results page is "<firstCarModel>" "<firstCarVersion>"
+```
+
+- **Datos de ejemplo**: Fuel/Electric Hybrid/`?fuelTypes=electric-hybrid`
+- En el estado actual, la selección de la opción y las comprobaciones de URL y vehículo están comentadas; este outline solo navega a la página de coches y abre el filtro Fuel.
+
+#### Verify response of the filters "Fuel" y "Body Type" combinados
+
+```gherkin
+Scenario Outline: Verify response of the filters "<filter_1>" option "<option_1>" and "<filter_2>" option "<option_2>"
+  Given the user go to cars page on Revel URL
+  When the user clicks on filter "<filter_1>"
+  And the user choose the option "<option_1>"
+  And the user clicks on filter "<filter_2>"
+  And the user choose the option "<option_2>"
+  Then the filter option "<filtersOptionsInURL>" appears in the URL
+  And the first car in the results page is "<firstCarModel>" "<firstCarVersion>"
+```
+
+- **Objetivo**: Validar combinación de múltiples filtros
+- **Datos de prueba**: Fuel + Body Type
+- **Verificación**: URL contiene ambos parámetros → Resultado correcto
+
+#### Filters without results
+
+- **Objetivo**: Validar comportamiento cuando no hay resultados
+- **Datos de prueba**: Combinación Fuel + Body Type + Color (sin resultados)
+- **Verificación**: Aparece mensaje "¿No encuentras lo que buscas?"
+
+#### Cleaning filters
+
+- **Objetivo**: Validar limpieza de filtros aplicados
+- **Datos de prueba**: Fuel + Body Type aplicados y luego limpiados
+- **Verificación**: URL sin parámetros → Primer vehículo es "Peugeot 208 Allure"
+
+### Steps Definition
+
+Cada feature se vincula con sus correspondientes steps en TypeScript:
+
+- `src/test/steps/loginSteps.ts` - Implementa los pasos del feature de login
+- `src/test/steps/filtersOurCarsSteps.ts` - Implementa los pasos del feature de filtros
+
+**Ejemplo de step**:
+
+```typescript
+When('the user login with his phone {string}', async function (phone) {
+  console.log('Phone: ' + phone);
+  loginPage = new LoginPage(pageFixture.page);
+  await loginPage.setPhone(phone);
+  await loginPage.clickContinueButton();
+});
+```
+
+### Page Object Model & Locators
+
+La estructura mantiene el patrón POM con separación de responsabilidades:
+
+- **Pages** (`src/pages/`): Contienen métodos de alto nivel para interactuar con la aplicación
+- **Locators** (`src/support/locators/`): Centralizan todos los selectores de elementos (desacoplamiento)
+
+**Ejemplo de Locators**:
+
+```typescript
+export class LoginLocators {
+  readonly phoneInput: Locator;
+  readonly continueButton: Locator;
+  readonly otpInput: Locator;
+
+  constructor(page: Page) {
+    this.phoneInput = page.locator('input[name="phone number"]');
+    this.continueButton = page.getByRole('button', { name: 'Continuar' });
+    // ...
+  }
+}
+```
+
+**Ejemplo de Page**:
+
+```typescript
+export class LoginPage {
+  private page: Page;
+  private loginLocators: LoginLocators;
+
+  async setPhone(telephone: string) {
+    await this.loginLocators.phoneInput.click();
+    await this.loginLocators.phoneInput.fill(telephone);
+  }
+}
+```
 
 ## 🔐 Manejo de OTP - Estado Actual vs. Entorno Real
 
@@ -95,16 +236,19 @@ Twilio proporciona una API REST que permite acceder al código de verificación 
 ```typescript
 // Ejemplo de cómo obtener el OTP desde la API de Twilio
 async function getOTPFromTwilio(phoneNumber: string): Promise<string> {
-  const response = await fetch('https://verify.twilio.com/v2/Services/{SERVICE_SID}/Verifications', {
-    method: 'GET',
-    headers: {
-      'Authorization': `Bearer ${process.env.TWILIO_API_KEY}`
-    },
-    body: JSON.stringify({
-      phone_number: phoneNumber,
-      status: 'pending'
-    })
-  });
+  const response = await fetch(
+    'https://verify.twilio.com/v2/Services/{SERVICE_SID}/Verifications',
+    {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${process.env.TWILIO_API_KEY}`,
+      },
+      body: JSON.stringify({
+        phone_number: phoneNumber,
+        status: 'pending',
+      }),
+    }
+  );
 
   const data = await response.json();
   // El OTP está disponible en la respuesta de Twilio en entornos de prueba
@@ -113,6 +257,7 @@ async function getOTPFromTwilio(phoneNumber: string): Promise<string> {
 ```
 
 **Ventajas**:
+
 - Oficial y soportado por Twilio
 - Funciona en entornos de staging
 - No requiere hardware adicional
@@ -135,24 +280,27 @@ export default defineConfig({
         device: 'Samsung Galaxy S21',
         osVersion: '12.0',
         networkLogs: true,
-        appiumVersion: '1.22.0'
-      }
-    }
-  }
+        appiumVersion: '1.22.0',
+      },
+    },
+  },
 });
 ```
 
 **Flujo de prueba**:
+
 1. El dispositivo real recibe el SMS con el OTP
 2. Se intercepta el SMS usando APIs de BrowserStack
 3. Se extrae el código y se utiliza en la prueba
 
 **Ventajas**:
+
 - Pruebas en dispositivos reales
 - Simula correctamente el comportamiento del usuario
 - Captura de errores más realistas
 
 **Desventajas**:
+
 - Costo más elevado
 - Mayor latencia en ejecución
 
@@ -175,13 +323,13 @@ async function getOTPFromPhoneViaSMS(): Promise<string> {
     const { stdout } = await execAsync(
       'adb shell content query --uri content://sms/inbox --projection body'
     );
-    
+
     // Parsear y extraer el código de 4 dígitos (ajustar según formato)
     const match = stdout.match(/\\d{4}/);
     if (match) {
       return match[0];
     }
-    
+
     throw new Error('OTP not found in SMS');
   } catch (error) {
     console.error('Error reading SMS via ADB:', error);
@@ -198,30 +346,33 @@ test('Login with dynamic OTP', async ({ page }) => {
 ```
 
 **Requisitos**:
+
 - Android SDK instalado
 - ADB (Android Debug Bridge) configurado
 - Dispositivo físico conectado por USB con depuración habilitada
 
 **Ventajas**:
+
 - Costo muy bajo (solo requiere un dispositivo Android)
 - Control total sobre el dispositivo
 - OTP real sin intermediarios
 
 **Desventajas**:
+
 - Solo para Android
 - Requiere configuración local del dispositivo
 - No es escalable para CI/CD distribuido
-- Puede fallar si el dispositivo se desconecta. Esto ocurría con frecuencia cuando lo usé en un proyecto de  Telefónica+Ericsson.
+- Puede fallar si el dispositivo se desconecta. Esto ocurría con frecuencia cuando lo usé en un proyecto de Telefónica+Ericsson.
 
 ---
 
 ### 📊 Comparativa de Soluciones
 
-| Solución | Costo | Facilidad | Escalabilidad | Para CI/CD |
-|----------|-------|-----------|---------------|-----------|
-| **Twilio API** | Bajo | Alta | Alta | ✅ Recomendado |
-| **BrowserStack** | Alto | Media | Alta | ✅ Sí |
-| **ADB Local** | Muy Bajo | Baja | Baja | ❌ No |
+| Solución         | Costo    | Facilidad | Escalabilidad | Para CI/CD     |
+| ---------------- | -------- | --------- | ------------- | -------------- |
+| **Twilio API**   | Bajo     | Alta      | Alta          | ✅ Recomendado |
+| **BrowserStack** | Alto     | Media     | Alta          | ✅ Sí          |
+| **ADB Local**    | Muy Bajo | Baja      | Baja          | ❌ No          |
 
 ### ✨ Recomendación
 
